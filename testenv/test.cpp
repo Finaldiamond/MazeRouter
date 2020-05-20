@@ -1,8 +1,8 @@
 #include<iostream>
 #include<list>
 #include<queue>
-#include <fstream>
-#include <string>
+#include<fstream>
+#include<string>
 using namespace std;
 int ** grid;//全局变量
 int n=0,m=0;//矩阵的行列数
@@ -96,20 +96,21 @@ return aa;
 }
 
 //***************主函数**************
-void main()
+int main()
 {
-int i=0,j=0,k=0;
-Position start,finish;
-int PathLen;
-Position * path;
-//打开输入文件，文件的第一行为矩阵的行列数：n,m
+	int i=0,j=0,k=0;
+	Position start,finish;
+	int PathLen;
+	Position * path;
+	//打开输入文件，文件的第一行为矩阵的行列数：n,m
 	string input;
 	cout<<"enter input file name"<<endl;
 	cin>>input;
 	ifstream inputFile(input.c_str());
-	if(!inputFile){
-	cout<<"can't open inupt file."<<endl;
-	return;
+	if(!inputFile)
+	{
+		cout<<"can't open inupt file."<<endl;
+		return 0;
 	}
 	//请输入输出文件名
 	string output;
@@ -117,9 +118,10 @@ Position * path;
 	cout<<"enter output file name"<<endl;
 	cin>>output;
     outputFile.open (output.c_str (),ios::app);
-    if(!outputFile){
-	cout<<"can't open output file."<<endl;
-	return;
+    if(!outputFile)
+	{
+		cout<<"can't open output file."<<endl;
+		return 0;
 	}
 
     inputFile>>n;//取得矩阵的行数n
@@ -138,23 +140,23 @@ Position * path;
 		}
 		cout<<endl;
 	}
-FindPath(start,finish,PathLen,path);
-//输出结果
-cout<<endl<<"结果如下："<<endl<<endl;
-for(i=0;i<n+2;i++)
-{
-for(j=0;j<m+2;j++){
-	for(k=0;k<PathLen;k++)
-		if(i==path[k].row&&j==path[k].col)
-		{cout<<"* ";outputFile<<"* ";break;}
-		if(k==PathLen){cout<<grid[i][j]<<" ";outputFile<<grid[i][j]<<" ";}
-}
-cout<<endl;
-outputFile<<endl;
-}
-outputFile<<"路径长度为："<<PathLen<<endl;
-inputFile.close();
-outputFile.close();
-delete []grid;
-
+	FindPath(start,finish,PathLen,path);
+	//输出结果
+	cout<<endl<<"结果如下："<<endl<<endl;
+	for(i=0;i<n+2;i++)
+	{
+		for(j=0;j<m+2;j++){
+			for(k=0;k<PathLen;k++)
+				if(i==path[k].row&&j==path[k].col)
+				{cout<<"* ";outputFile<<"* ";break;}
+				if(k==PathLen){cout<<grid[i][j]<<" ";outputFile<<grid[i][j]<<" ";}
+	}
+	cout<<endl;
+	outputFile<<endl;
+	}
+	outputFile<<"路径长度为："<<PathLen<<endl;
+	inputFile.close();
+	outputFile.close();
+	delete []grid;
+	return 1;
 } 
