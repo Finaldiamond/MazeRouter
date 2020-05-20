@@ -8,10 +8,10 @@
 using namespace std;
 
 
-// ÃÔ¹¬¸ñ×Ó×´Ì¬
-enum CellState£ºint { PATH = 0, WALL, FLAG };
+// è¿·å®«æ ¼å­çŠ¶æ€
+enum CellStateï¼šint { PATH = 0, WALL, FLAG };
 
-// ÃÔ¹¬¸ñ¶şÎ¬µã½á¹¹
+// è¿·å®«æ ¼äºŒç»´ç‚¹ç»“æ„
 struct Point2
 {
     int x, y;
@@ -19,18 +19,18 @@ struct Point2
     bool operator == (const Point2& p2) { return x == p2.x && y == p2.y; }
 };
 
-// ÃÔ¹¬´óĞ¡£¨ÒªÇóÎªÆæÊı£©
+// è¿·å®«å¤§å°ï¼ˆè¦æ±‚ä¸ºå¥‡æ•°ï¼‰
 const int mazeSize = 21;
 
 
-// ÃÔ¹¬Éú³É½Ó¿Ú--µİ¹é°æ
+// è¿·å®«ç”Ÿæˆæ¥å£--é€’å½’ç‰ˆ
 void DFS_generator(int _x, int _y, std::vector<std::vector<int>>& maze)
 {
-    // ¶¨Òå·½ÏòÈİÆ÷
+    // å®šä¹‰æ–¹å‘å®¹å™¨
     std::vector<std::vector<int>> dir{ {1,0},{-1,0},{0,1},{0,-1} };
-    // Ëæ»ú´òÂÒ·½Ïò
+    // éšæœºæ‰“ä¹±æ–¹å‘
     std::random_shuffle(dir.begin(), dir.end());
-    // µİ¹éÉú³ÉÃÔ¹¬
+    // é€’å½’ç”Ÿæˆè¿·å®«
     maze[_x][_y] = PATH;
     for (int i = 0; i < 4; ++i)
     {
@@ -43,22 +43,22 @@ void DFS_generator(int _x, int _y, std::vector<std::vector<int>>& maze)
     }
 }
 
-// ÃÔ¹¬Éú³É½Ó¿Ú--µü´ú°æ
+// è¿·å®«ç”Ÿæˆæ¥å£--è¿­ä»£ç‰ˆ
 void DFS_iterative_generator(std::vector<std::vector<int>>& maze)
 {
-    // ¶¨ÒåÕ»ÈİÆ÷
+    // å®šä¹‰æ ˆå®¹å™¨
     std::stack<Point2> sp;
-    // ¶¨Òå·½ÏòÈİÆ÷
+    // å®šä¹‰æ–¹å‘å®¹å™¨
     std::vector<std::vector<int>> dir{ {1,0},{-1,0},{0,1},{0,-1} };
-    // ÒªÇó²ÎÊıÎªÆæÊı
+    // è¦æ±‚å‚æ•°ä¸ºå¥‡æ•°
     Point2 temp((rand() % (mazeSize - 2) + 1) | 1, (rand() % (mazeSize - 2) + 1) | 1);
     sp.push(temp);
-    // ºóĞøµü´úÉú³ÉÃÔ¹¬£¬²¢»æÖÆ
+    // åç»­è¿­ä»£ç”Ÿæˆè¿·å®«ï¼Œå¹¶ç»˜åˆ¶
     while (!sp.empty())
     {
         if (maze[temp.x][temp.y] != PATH)
             maze[temp.x][temp.y] = PATH;
-        // Ëæ»ú´òÂÒ·½Ïò
+        // éšæœºæ‰“ä¹±æ–¹å‘
         std::random_shuffle(dir.begin(), dir.end());
         int i = 0;
         for (; i < 4; ++i)
@@ -78,26 +78,26 @@ void DFS_iterative_generator(std::vector<std::vector<int>>& maze)
     }
 }
 
-// DFS Ñ°Â·
+// DFS å¯»è·¯
 std::list<Point2> DFS_find(const Point2& start, const Point2& end, std::vector<std::vector<int>>& maze)
 {
-    // ¶¨Òå·½ÏòÈİÆ÷£¨ÓÒ¡¢ÏÂ¡¢×ó¡¢ÉÏ£©
+    // å®šä¹‰æ–¹å‘å®¹å™¨ï¼ˆå³ã€ä¸‹ã€å·¦ã€ä¸Šï¼‰
     std::vector<std::vector<int>> dir{ {1,0},{0,1},{-1,0},{0,-1} };
-    // ¶¨ÒåÕ»ÈİÆ÷
+    // å®šä¹‰æ ˆå®¹å™¨
     std::list<Point2> sp;
     Point2 temp = start;
     sp.push_back(temp);
-    // ÓëÉú³ÉËã·¨ÏàËÆ£¬µü´ú DFS ±éÀú
+    // ä¸ç”Ÿæˆç®—æ³•ç›¸ä¼¼ï¼Œè¿­ä»£ DFS éå†
     while (!sp.empty())
     {
         int i = 0;
-        // Èô¿ÉÏòÆäËû·½ÏòÇ°½ø£¬Ôò¼ÌĞø
+        // è‹¥å¯å‘å…¶ä»–æ–¹å‘å‰è¿›ï¼Œåˆ™ç»§ç»­
         for (; i < 4; ++i)
         {
             if (temp.x + dir[i][0] >= 0 && temp.x + dir[i][0] <= mazeSize - 1 && temp.y + dir[i][1] >= 0 && temp.y + dir[i][1] <= mazeSize - 1
                 && maze[temp.x + dir[i][0]][temp.y + dir[i][1]] == PATH)
             {
-                // ¶Ô×ß¹ıµÄÂ·½øĞĞ±ê¼Ç
+                // å¯¹èµ°è¿‡çš„è·¯è¿›è¡Œæ ‡è®°
                 maze[temp.x][temp.y] = FLAG;
                 temp.x += dir[i][0];
                 temp.y += dir[i][1];
@@ -106,7 +106,7 @@ std::list<Point2> DFS_find(const Point2& start, const Point2& end, std::vector<s
                 break;
             }
         }
-        // ÎŞÂ·¿É×ßÊ±»ØËİ
+        // æ— è·¯å¯èµ°æ—¶å›æº¯
         if (i == 4)
         {
             maze[temp.x][temp.y] = FLAG;
@@ -114,7 +114,7 @@ std::list<Point2> DFS_find(const Point2& start, const Point2& end, std::vector<s
             if (!sp.empty()) temp = sp.back();
         }
     }
-    // ½«±»±ê¼ÇµÄÍ¨Â·»¹Ô­
+    // å°†è¢«æ ‡è®°çš„é€šè·¯è¿˜åŸ
     for (auto& v1 : maze)
         for (auto& v2 : v1)
             if (v2 == FLAG) v2 = PATH;
@@ -123,29 +123,29 @@ std::list<Point2> DFS_find(const Point2& start, const Point2& end, std::vector<s
 }
 
 
-// main º¯Êı
+// main å‡½æ•°
 int main()
 {
     srand((unsigned)time(nullptr));
 
-    // Èë¿Ú³ö¿Ú
+    // å…¥å£å‡ºå£
     Point2 start(0, 1);
     Point2 end(mazeSize - 1, mazeSize - 2);
 
-    // ¶şÎ¬ÃÔ¹¬ÈİÆ÷
+    // äºŒç»´è¿·å®«å®¹å™¨
     std::vector<std::vector<int>> maze;
 
-    // ³õÊ¼»¯ÃÔ¹¬
+    // åˆå§‹åŒ–è¿·å®«
     for (int i = 0; i < mazeSize; ++i) maze.push_back(std::vector<int>());
     for (int i = 0; i < mazeSize; ++i)
         for (int j = 0; j < mazeSize; ++j)
             maze[i].push_back(WALL);
     maze[start.x][start.y] = maze[end.x][end.y] = PATH;
 
-    // Éú³ÉÃÔ¹¬
+    // ç”Ÿæˆè¿·å®«
     DFS_iterative_generator(maze);
 
-    // ´òÓ¡ÃÔ¹¬
+    // æ‰“å°è¿·å®«
     for (int j = 0; j < mazeSize; ++j)
     {
         for (int i = 0; i < mazeSize; ++i)
@@ -153,10 +153,10 @@ int main()
         cout << endl;
     }
 
-    // Ñ°Â·
+    // å¯»è·¯
     auto sp = DFS_find(start, end, maze);
-    // ´òÓ¡Â·¾¶
-    cout << endl << "Ñ°Â·Â·¾¶£º" << endl;
+    // æ‰“å°è·¯å¾„
+    cout << endl << "å¯»è·¯è·¯å¾„ï¼š" << endl;
     int i = 0;
     for (auto p2 : sp)
     {
@@ -166,7 +166,7 @@ int main()
             cout << "(" << p2.x << ", " << p2.y << ")" << endl;
             continue;
         }
-        cout << "(" << p2.x << ", " << p2.y << ")" << "¡¢";
+        cout << "(" << p2.x << ", " << p2.y << ")" << "ã€";
     }
     cout << endl;
 

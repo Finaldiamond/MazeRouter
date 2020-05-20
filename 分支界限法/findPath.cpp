@@ -4,83 +4,83 @@
 #include <fstream>
 #include <string>
 using namespace std;
-int ** grid;//È«¾Ö±äÁ¿
-int n=0,m=0;//¾ØÕóµÄĞĞÁĞÊı
+int ** grid;//å…¨å±€å˜é‡
+int n=0,m=0;//çŸ©é˜µçš„è¡Œåˆ—æ•°
 
 class Position{
 public:
-	int row,//±íÊ¾·½¸ñËùÔÚµÄĞĞºÍÁĞ
+	int row,//è¡¨ç¤ºæ–¹æ ¼æ‰€åœ¨çš„è¡Œå’Œåˆ—
 		col;
 };
 
 bool FindPath(Position start,Position finish,int& PathLen,Position * & path)
-{//¼ÆËã´ÓÆğÊ¼Î»ÖÃstartµ½Ä¿±êÎ»ÖÃfinishµÄ×î¶Ì²¼ÏßÂ·¾¶
-	//ÕÒµ½×î¶Ì²¼ÏßÂ·¾¶Ôò·µ»Øfalse
+{//è®¡ç®—ä»èµ·å§‹ä½ç½®startåˆ°ç›®æ ‡ä½ç½®finishçš„æœ€çŸ­å¸ƒçº¿è·¯å¾„
+	//æ‰¾åˆ°æœ€çŸ­å¸ƒçº¿è·¯å¾„åˆ™è¿”å›false
 	int i=0;
 	if((start.row==finish.row)&&(start.col==finish.col))
 	{PathLen=0;return true;}
-	//ÉèÖÃ·½¸ñÕóÁĞ¡°Î§Ç½¡±
+	//è®¾ç½®æ–¹æ ¼é˜µåˆ—â€œå›´å¢™â€
 	for(i=0;i<=m+1;i++)
-		grid[0][i]=grid[n+1][i]=1;//¶¥²¿ºÍµ×²¿
+		grid[0][i]=grid[n+1][i]=1;//é¡¶éƒ¨å’Œåº•éƒ¨
 	for(i=0;i<=n+1;i++)
-		grid[i][0]=grid[i][m+1]=1;//×óÒíºÍÓÒÒí
-	//³õÊ¼»¯Ïà¶ÔÎ»ÒÆ
+		grid[i][0]=grid[i][m+1]=1;//å·¦ç¿¼å’Œå³ç¿¼
+	//åˆå§‹åŒ–ç›¸å¯¹ä½ç§»
 	Position offset[4];
-	offset[0].row=0;offset[0].col=1;//ÓÒ
-    offset[1].row=1;offset[1].col=0;//ÏÂ
-	offset[2].row=0;offset[2].col=-1;//×ó
-	offset[3].row=-1;offset[3].col=0;//ÉÏ
-	int NumOfNbrs=4;//ÏàÁÚ·½¸ñÊı
+	offset[0].row=0;offset[0].col=1;//å³
+    offset[1].row=1;offset[1].col=0;//ä¸‹
+	offset[2].row=0;offset[2].col=-1;//å·¦
+	offset[3].row=-1;offset[3].col=0;//ä¸Š
+	int NumOfNbrs=4;//ç›¸é‚»æ–¹æ ¼æ•°
 	Position here,nbr;
 	here.row=start.row;
 	here.col=start.col;
-	grid[start.row][start.col]=2;//ÆğÊ¼Î»ÖÃµÄ¾àÀë±ê¼ÇÎª2
+	grid[start.row][start.col]=2;//èµ·å§‹ä½ç½®çš„è·ç¦»æ ‡è®°ä¸º2
 
-    grid[finish.row][finish.col]=0;//ÖÕµã±ê¼ÇÎª0
+    grid[finish.row][finish.col]=0;//ç»ˆç‚¹æ ‡è®°ä¸º0
 
-	queue<Position,list<Position> > Q;//ÏÈ½øÏÈ³ö¶ÓÁĞ
-	do{//±ê¼Ç¿É´ïÏàÁÚ·½¸ñ
+	queue<Position,list<Position> > Q;//å…ˆè¿›å…ˆå‡ºé˜Ÿåˆ—
+	do{//æ ‡è®°å¯è¾¾ç›¸é‚»æ–¹æ ¼
 		for( i=0;i<NumOfNbrs;i++)
 		{
-		nbr.row=here.row+offset[i].row;//°´ÓÒ£¬ÏÂ£¬×ó£¬ÉÏ£¬ÒÆ¶¯
+		nbr.row=here.row+offset[i].row;//æŒ‰å³ï¼Œä¸‹ï¼Œå·¦ï¼Œä¸Šï¼Œç§»åŠ¨
 		nbr.col=here.col+offset[i].col;
 		if(grid[nbr.row][nbr.col]==0){
-			//¸Ã·½¸ñÎ´±ê¼Ç
-			grid[nbr.row][nbr.col]=grid[here.row][here.col]+1;//¾àÀë¼Ó1
-				if((nbr.row==finish.row)&&(nbr.col==finish.col))break;//Íê³É²¼Ïß
+			//è¯¥æ–¹æ ¼æœªæ ‡è®°
+			grid[nbr.row][nbr.col]=grid[here.row][here.col]+1;//è·ç¦»åŠ 1
+				if((nbr.row==finish.row)&&(nbr.col==finish.col))break;//å®Œæˆå¸ƒçº¿
 				Q.push(nbr);}
 		}
-		//ÊÇ·ñµ½´ïÄ¿±êÎ»ÖÃfinish?
-		if((nbr.row==finish.row)&&(nbr.col==finish.col))break;//Íê³É²¼Ïß
-		//»î½áµã¶ÓÁĞÊÇ·ñ·Ç¿Õ
-		if(Q.empty()) return false;//ÎŞ½â
-		here=Q.front();//È¡ÏÂÒ»À©Õ¹½áµã
-		Q.pop();//É¾³ıµÚÒ»¸öÔªËØ
+		//æ˜¯å¦åˆ°è¾¾ç›®æ ‡ä½ç½®finish?
+		if((nbr.row==finish.row)&&(nbr.col==finish.col))break;//å®Œæˆå¸ƒçº¿
+		//æ´»ç»“ç‚¹é˜Ÿåˆ—æ˜¯å¦éç©º
+		if(Q.empty()) return false;//æ— è§£
+		here=Q.front();//å–ä¸‹ä¸€æ‰©å±•ç»“ç‚¹
+		Q.pop();//åˆ é™¤ç¬¬ä¸€ä¸ªå…ƒç´ 
    
 		}while(true);
 		
-	//¹¹Ôì×î¶Ì²¼ÏßÂ·¾¶
-	PathLen=grid[finish.row][finish.col]-2;//Ïà¶ÔÓÚstartµãµÄ¾àÀë
+	//æ„é€ æœ€çŸ­å¸ƒçº¿è·¯å¾„
+	PathLen=grid[finish.row][finish.col]-2;//ç›¸å¯¹äºstartç‚¹çš„è·ç¦»
 		path=new Position[PathLen];
-		//´ÓÄ¿±êÎ»ÖÃfinish¿ªÊ¼ÏòÆğÊ¼Î»ÖÃ»ØË·
+		//ä»ç›®æ ‡ä½ç½®finishå¼€å§‹å‘èµ·å§‹ä½ç½®å›æœ”
 		here=finish;
 		for(int j=PathLen-1;j>=0;j--){
 			path[j]=here;
-			//ÕÒÇ°ÇıÎ»ÖÃ
+			//æ‰¾å‰é©±ä½ç½®
 			for(int i=0;i<NumOfNbrs;i++){
-				nbr.row=here.row+offset[i].row;//°´ÓÒ£¬ÏÂ£¬×ó£¬ÉÏ£¬ÒÆ¶¯
+				nbr.row=here.row+offset[i].row;//æŒ‰å³ï¼Œä¸‹ï¼Œå·¦ï¼Œä¸Šï¼Œç§»åŠ¨
 				nbr.col=here.col+offset[i].col;
-				if(grid[nbr.row][nbr.col]==j+2)break;//¾àÀëÒÀ´Î¼õĞ¡£º7-6-5-4-3-2
+				if(grid[nbr.row][nbr.col]==j+2)break;//è·ç¦»ä¾æ¬¡å‡å°ï¼š7-6-5-4-3-2
 			}
-			here=nbr;//ÏòÇ°ÒÆ¶¯
+			here=nbr;//å‘å‰ç§»åŠ¨
 		}
 		return true;
 }
 
-//¶¯Ì¬²úÉú¶şÎ¬Êı×é[n][m]
-//²¢³õÊ¼»¯ÎªÈ«0
+//åŠ¨æ€äº§ç”ŸäºŒç»´æ•°ç»„[n][m]
+//å¹¶åˆå§‹åŒ–ä¸ºå…¨0
 int** new_arry(int n,int m)
-{//Ëù²úÉúµÄ¶şÎ¬Êı×éµÚ0ĞĞµÚ0ÁĞ²»¿ÉÓÃ
+{//æ‰€äº§ç”Ÿçš„äºŒç»´æ•°ç»„ç¬¬0è¡Œç¬¬0åˆ—ä¸å¯ç”¨
 int** aa;
 aa=new int*[n];
 int i=0,j=0;
@@ -95,14 +95,14 @@ for(j=0;j<m;j++)
 return aa;
 }
 
-//***************Ö÷º¯Êı**************
+//***************ä¸»å‡½æ•°**************
 void main()
 {
 int i=0,j=0,k=0;
 Position start,finish;
 int PathLen;
 Position * path;
-//´ò¿ªÊäÈëÎÄ¼ş£¬ÎÄ¼şµÄµÚÒ»ĞĞÎª¾ØÕóµÄĞĞÁĞÊı£ºn,m
+//æ‰“å¼€è¾“å…¥æ–‡ä»¶ï¼Œæ–‡ä»¶çš„ç¬¬ä¸€è¡Œä¸ºçŸ©é˜µçš„è¡Œåˆ—æ•°ï¼šn,m
 	string input;
 	cout<<"enter input file name"<<endl;
 	cin>>input;
@@ -111,7 +111,7 @@ Position * path;
 	cout<<"can't open inupt file."<<endl;
 	return;
 	}
-	//ÇëÊäÈëÊä³öÎÄ¼şÃû
+	//è¯·è¾“å…¥è¾“å‡ºæ–‡ä»¶å
 	string output;
 	ofstream outputFile;
 	cout<<"enter output file name"<<endl;
@@ -122,11 +122,11 @@ Position * path;
 	return;
 	}
 
-    inputFile>>n;//È¡µÃ¾ØÕóµÄĞĞÊın
-	inputFile>>m;//È¡µÃ¾ØÕóµÄĞĞÊım
+    inputFile>>n;//å–å¾—çŸ©é˜µçš„è¡Œæ•°n
+	inputFile>>m;//å–å¾—çŸ©é˜µçš„è¡Œæ•°m
 
-	 grid=new_arry( n+2, m+2);//Ö±½Ó´´½¨Ò»¸ö¶¯Ì¬¶şÎ¬Êı×é£¬ºÃÏóÓÃÆğÀ´ºÜ·½±ã£¡
-    //´ÓÊäÈëÎÄ¼şÖĞ¶ÁÈ¡¾ØÕó
+	 grid=new_arry( n+2, m+2);//ç›´æ¥åˆ›å»ºä¸€ä¸ªåŠ¨æ€äºŒç»´æ•°ç»„ï¼Œå¥½è±¡ç”¨èµ·æ¥å¾ˆæ–¹ä¾¿ï¼
+    //ä»è¾“å…¥æ–‡ä»¶ä¸­è¯»å–çŸ©é˜µ
 	for(i=1;i<=n;i++)
 	{
 		for(j=1;j<=m;j++)
@@ -139,8 +139,8 @@ Position * path;
 		cout<<endl;
 	}
 FindPath(start,finish,PathLen,path);
-//Êä³ö½á¹û
-cout<<endl<<"½á¹ûÈçÏÂ£º"<<endl<<endl;
+//è¾“å‡ºç»“æœ
+cout<<endl<<"ç»“æœå¦‚ä¸‹ï¼š"<<endl<<endl;
 for(i=0;i<n+2;i++)
 {
 for(j=0;j<m+2;j++){
@@ -152,7 +152,7 @@ for(j=0;j<m+2;j++){
 cout<<endl;
 outputFile<<endl;
 }
-outputFile<<"Â·¾¶³¤¶ÈÎª£º"<<PathLen<<endl;
+outputFile<<"è·¯å¾„é•¿åº¦ä¸ºï¼š"<<PathLen<<endl;
 inputFile.close();
 outputFile.close();
 delete []grid;
